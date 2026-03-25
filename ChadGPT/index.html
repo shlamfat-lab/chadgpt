@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChadGPT 💪</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chad-black: #0a0a0a;
+    --chad-dark: #111111;
+    --chad-card: #181818;
+    --chad-border: #2a2a2a;
+    --chad-gold: #f5c842;
+    --chad-gold-dim: #c9a020;
+    --chad-blue: #1da1f2;
+    --chad-red: #e63946;
+    --chad-white: #f0f0f0;
+    --chad-muted: #888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--chad-black);
+    color: var(--chad-white);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 2px solid var(--chad-gold);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, #141414 0%, #0a0a0a 100%);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  .logo-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 12px rgba(245,200,66,0.5));
+    animation: flex 3s ease-in-out infinite;
+  }
+
+  @keyframes flex {
+    0%, 100% { transform: scale(1) rotate(-5deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 4px;
+    color: var(--chad-gold);
+    text-shadow: 0 0 30px rgba(245,200,66,0.3), 3px 3px 0 #000;
+    line-height: 1;
+  }
+
+  .logo-tagline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--chad-muted);
+    margin-top: 2px;
+  }
+
+  .header-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--chad-blue);
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+  }
+
+  .hero {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    background: radial-gradient(ellipse at top, #1a1500 0%, transparent 60%);
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    letter-spacing: 6px;
+    line-height: 1;
+    color: var(--chad-white);
+    text-shadow: 3px 3px 0 var(--chad-gold-dim);
+  }
+
+  .hero h1 span { color: var(--chad-gold); }
+
+  .hero p {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: var(--chad-muted);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin: 2.5rem auto 0;
+    max-width: 600px;
+    padding: 1.2rem 2rem;
+    background: var(--chad-card);
+    border: 1px solid var(--chad-border);
+    border-radius: 12px;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--chad-gold);
+    letter-spacing: 2px;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--chad-muted);
+    margin-top: 2px;
+  }
+
+  .main {
+    position: relative;
+    z-index: 5;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .chat-panel {
+    background: var(--chad-card);
+    border: 1px solid var(--chad-border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--chad-border);
+    background: #141414;
+  }
+
+  .panel-header-icon { font-size: 1.3rem; }
+
+  .panel-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--chad-gold);
+  }
+
+  .live-dot {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #4ade80;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+  }
+
+  .live-dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .messages {
+    min-height: 280px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--chad-border) transparent;
+  }
+
+  .message {
+    display: flex;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .message.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    border: 2px solid var(--chad-border);
+  }
+
+  .message.user .msg-avatar { background: #1a2a1a; border-color: #4ade80; }
+  .message.chad .msg-avatar { background: #1a1400; border-color: var(--chad-gold); }
+
+  .msg-bubble {
+    max-width: 78%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .message.user .msg-bubble {
+    background: #1e2a1e;
+    border: 1px solid #2a3a2a;
+    border-top-right-radius: 3px;
+    color: #d0ffd0;
+  }
+
+  .message.chad .msg-bubble {
+    background: #1a1500;
+    border: 1px solid #3a3000;
+    border-top-left-radius: 3px;
+    color: var(--chad-white);
+  }
+
+  .msg-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--chad-muted);
+  }
+
+  .message.chad .msg-name { color: var(--chad-gold-dim); }
+
+  .input-area {
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--chad-border);
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .input-wrap { flex: 1; }
+
+  textarea {
+    width: 100%;
+    background: #0f0f0f;
+    border: 1px solid var(--chad-border);
+    border-radius: 10px;
+    color: var(--chad-white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    resize: none;
+    min-height: 52px;
+    max-height: 140px;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  textarea:focus { outline: none; border-color: var(--chad-gold); }
+  textarea::placeholder { color: #444; }
+
+  .send-btn {
+    background: var(--chad-gold);
+    color: var(--chad-black);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    padding: 0 1.4rem;
+    height: 52px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover { background: #ffd700; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(245,200,66,0.3); }
+  .send-btn:active { transform: translateY(0); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .thinking-row {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .thinking {
+    padding: 0.6rem 1rem;
+    background: #1a1500;
+    border: 1px solid #3a3000;
+    border-radius: 12px;
+    border-top-left-radius: 3px;
+    font-size: 0.85rem;
+    color: var(--chad-gold-dim);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .thinking-dots span {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--chad-gold);
+    animation: bounce 1.2s ease-in-out infinite;
+    margin: 0 1px;
+  }
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .twitter-panel {
+    background: var(--chad-card);
+    border: 1px solid var(--chad-border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .twitter-inner {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .twitter-inner { grid-template-columns: 1fr; }
+    .stats-bar { gap: 1.5rem; flex-wrap: wrap; }
+  }
+
+  .how-it-works h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--chad-gold);
+    margin-bottom: 1rem;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .step { display: flex; gap: 0.75rem; align-items: flex-start; }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: var(--chad-gold);
+    line-height: 1.2;
+    flex-shrink: 0;
+    width: 24px;
+  }
+
+  .step-text { font-size: 0.88rem; color: #bbb; line-height: 1.5; }
+  .step-text strong { color: var(--chad-white); }
+
+  .sample-tweets h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--chad-blue);
+    margin-bottom: 1rem;
+  }
+
+  .tweet-card {
+    background: #0f0f0f;
+    border: 1px solid var(--chad-border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.85rem;
+    color: #ccc;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .tweet-card:hover { border-color: var(--chad-blue); background: #0f1520; }
+  .tweet-card .mention { color: var(--chad-blue); font-weight: 600; }
+  .tweet-card .try-label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #444;
+    margin-top: 4px;
+  }
+
+  .error-bar {
+    margin: 0 1.5rem 1rem;
+    padding: 0.6rem 1rem;
+    background: #1a0808;
+    border: 1px solid var(--chad-red);
+    border-radius: 8px;
+    color: var(--chad-red);
+    font-size: 0.82rem;
+    font-family: 'Barlow Condensed', sans-serif;
+    letter-spacing: 1px;
+    display: none;
+  }
+
+  footer {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--chad-border);
+    margin-top: 1rem;
+  }
+
+  footer p { font-size: 0.78rem; color: #444; letter-spacing: 1px; font-family: 'Barlow Condensed', sans-serif; }
+  footer span { color: var(--chad-gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-icon">💪</div>
+    <div>
+      <div class="logo-text">ChadGPT</div>
+      <div class="logo-tagline">No Cap. All Gains.</div>
+    </div>
+  </div>
+  <div class="header-badge">🐦 @ChadGPT on X</div>
+</header>
+
+<div class="hero">
+  <h1>Ask Like a <span>Sigma</span>.<br>Get Answers Like a <span>Chad.</span></h1>
+  <p>AI-powered answers with max bro energy. Drop your question below or tweet us @ChadGPT — we don't gatekeep knowledge, bro.</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">No Cap</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Gains</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Cringe</div></div>
+    <div class="stat"><div class="stat-num">FR FR</div><div class="stat-label">Legit</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="chat-panel">
+    <div class="panel-header">
+      <div class="panel-header-icon">🏋️</div>
+      <div class="panel-title">Talk to ChadGPT</div>
+      <div class="live-dot">Live</div>
+    </div>
+    <div class="messages" id="messages">
+      <div class="message chad">
+        <div class="msg-avatar">💪</div>
+        <div>
+          <div class="msg-name">ChadGPT</div>
+          <div class="msg-bubble">YO WHAT IS UP BRO 🔥 ChadGPT in the building fr fr. I'm basically like regular AI but I've been hitting the gym and skipped leg day on the corporate cringe. Ask me ANYTHING — gym, life, philosophy, relationships — I got you, no cap. What we workin with today??</div>
+        </div>
+      </div>
+    </div>
+    <div class="error-bar" id="errorBar">⚠️ Couldn't reach the server bro. Make sure the backend is running!</div>
+    <div class="input-area">
+      <div class="input-wrap">
+        <textarea id="userInput" placeholder="Ask ChadGPT anything, bro... 💪" rows="1"></textarea>
+      </div>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">SEND IT 🚀</button>
+    </div>
+  </div>
+
+  <div class="twitter-panel">
+    <div class="panel-header">
+      <div class="panel-header-icon">🐦</div>
+      <div class="panel-title">X / Twitter Integration</div>
+    </div>
+    <div class="twitter-inner">
+      <div class="how-it-works">
+        <h3>How It Works</h3>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-text">Tweet at <strong>@ChadGPT</strong> with your question</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-text">Our X bot picks it up and runs it through <strong>Claude</strong> with full chad-mode</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-text"><strong>ChadGPT replies</strong> publicly on X with max bro energy within seconds</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-text">Goes viral because nobody expected AI to say "let's get it bro" and actually be right</div></div>
+        </div>
+      </div>
+      <div class="sample-tweets">
+        <h3>Try These →</h3>
+        <div class="tweet-card" onclick="tryTweet('should I quit my job and start a gym')">
+          <span class="mention">@ChadGPT</span> should I quit my job and start a gym
+          <span class="try-label">Click to try ↗</span>
+        </div>
+        <div class="tweet-card" onclick="tryTweet('explain quantum physics no cap')">
+          <span class="mention">@ChadGPT</span> explain quantum physics no cap
+          <span class="try-label">Click to try ↗</span>
+        </div>
+        <div class="tweet-card" onclick="tryTweet('is pizza good for gains')">
+          <span class="mention">@ChadGPT</span> is pizza good for gains
+          <span class="try-label">Click to try ↗</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Built on <span>Claude API</span> by Anthropic · Powered by <span>Bro Science™</span> · Not financial advice but def life advice</p>
+</footer>
+
+<script>
+  // ⚠️ REPLACE THIS with your Railway backend URL once deployed
+  const BACKEND_URL = "YOUR_RAILWAY_URL_HERE";
+
+  let isLoading = false;
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const errorBar = document.getElementById('errorBar');
+  const conversationHistory = [];
+
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + 'px';
+  });
+
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  function tryTweet(text) {
+    inputEl.value = text;
+    inputEl.dispatchEvent(new Event('input'));
+    inputEl.focus();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function addMessage(role, text) {
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    div.innerHTML = role === 'user'
+      ? `<div class="msg-avatar">🧑</div><div><div class="msg-name">You</div><div class="msg-bubble">${escapeHtml(text)}</div></div>`
+      : `<div class="msg-avatar">💪</div><div><div class="msg-name">ChadGPT</div><div class="msg-bubble">${escapeHtml(text)}</div></div>`;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function showThinking() {
+    const div = document.createElement('div');
+    div.className = 'message chad';
+    div.id = 'thinkingMsg';
+    div.innerHTML = `<div class="msg-avatar">💪</div><div><div class="msg-name">ChadGPT</div><div class="thinking">💭 Cooking up the gains&nbsp;<div class="thinking-dots"><span></span><span></span><span></span></div></div></div>`;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function hideThinking() {
+    const t = document.getElementById('thinkingMsg');
+    if (t) t.remove();
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text || isLoading) return;
+
+    errorBar.style.display = 'none';
+    isLoading = true;
+    sendBtn.disabled = true;
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+
+    addMessage('user', text);
+    conversationHistory.push({ role: 'user', content: text });
+    showThinking();
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory })
+      });
+
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      conversationHistory.push({ role: 'assistant', content: data.reply });
+      hideThinking();
+      addMessage('chad', data.reply);
+    } catch (err) {
+      hideThinking();
+      conversationHistory.pop();
+      errorBar.style.display = 'block';
+    }
+
+    isLoading = false;
+    sendBtn.disabled = false;
+    inputEl.focus();
+  }
+</script>
+</body>
+</html>
