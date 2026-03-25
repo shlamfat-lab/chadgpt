@@ -28,12 +28,13 @@ app.post("/chat", async (req, res) => {
       }),
     });
     const data = await response.json();
+    console.log("Anthropic response:", JSON.stringify(data));
     if (data.error) {
       return res.status(500).json({ error: data.error.message });
     }
     res.json({ reply: data.content?.[0]?.text || "Bro I blanked, try again 😅" });
   } catch (err) {
-    console.error(err);
+    console.error("Fetch error:", err);
     res.status(500).json({ error: "Server error bro" });
   }
 });
