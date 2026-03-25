@@ -13,26 +13,27 @@ app.post("/chat", async (req, res) => {
     return res.status(400).json({ error: "Missing messages array" });
   }
   try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "claude-3-5-sonnet-20241022",
+        model: "gpt-4o",
         max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages
+        ],
       }),
     });
     const data = await response.json();
-    console.log("Anthropic response:", JSON.stringify(data));
+    console.log("OpenAI response:", JSON.stringify(data));
     if (data.error) {
       return res.status(500).json({ error: data.error.message });
     }
-    res.json({ reply: data.content?.[0]?.text || "Bro I blanked, try again 😅" });
+    res.json({ reply: data.choices?.[0]?.message?.content || "Bro I blanked, try again 😅" });
   } catch (err) {
     console.error("Fetch error:", err);
     res.status(500).json({ error: "Server error bro" });
